@@ -1,0 +1,21 @@
+
+db:  #本地K-V数据库，二选一，推荐使用levelDB
+  levelDB: true    #启用levelDB
+version: 1
+name: ${NAME:root}
+appId: ${APP_ID:yumira01}
+
+singleNode: false #如果是单节点测试环境  正式环境：false  测试：true
+autoWork: false #挖到矿之后是否自动继续挖矿
+publicKey: AoIchvto4iLJ+beIWG96nmplK833e9Wf+slKOLAVw2tt #接收挖矿奖励的账户公钥
+
+targetBits: 20 #难度目标位，可以考虑下怎么动态递增
+mineReward: 100 #挖矿奖励，可以考虑下怎么根据难度目标位动态改变
+managerUrl: ${MANAGER_URL:http://localhost:8888/} #远端服务器地址
+localIP: 0.0.0.0 #本地节点对外暴露的serverIp，不是Tomcat端口
+localPort: 10001 #本地节点对外暴露的端口，供其他节点连接
+httpTimeOut: 10000
+connectTimeout: 10000
+
+
+
