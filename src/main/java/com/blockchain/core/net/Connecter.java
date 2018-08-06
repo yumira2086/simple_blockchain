@@ -5,6 +5,7 @@ import com.blockchain.common.ApplicationContextProvider;
 import com.blockchain.common.Constants;
 import com.blockchain.core.net.client.MessageClientListener;
 import com.blockchain.db.DbStore;
+import com.blockchain.utils.CommonUtil;
 import com.blockchain.utils.JsonUtil;
 import com.blockchain.utils.StringUtil;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.tio.core.Node;
 import org.tio.utils.lock.SetWithLock;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -162,9 +164,10 @@ public class Connecter {
     }
 
     public static Node getLocalServerNode(){
-        return new Node(App.LOCAL_IP,App.LOCAL_PORT);
+        InetAddress localHost = CommonUtil.getLocalHostLANAddress();
+        return new Node(localHost.getHostAddress(),App.LOCAL_PORT);
     }
-
+    
     /**
      * 通过总节点数求出pbft算法中拜占庭节点数量f，总节点数为3f+1
      */

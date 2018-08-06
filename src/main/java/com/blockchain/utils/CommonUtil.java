@@ -45,7 +45,7 @@ public class CommonUtil {
     /**
      * 获取本机ip地址
      */
-    private static InetAddress getLocalHostLANAddress() {
+    public static InetAddress getLocalHostLANAddress() {
         try {
             InetAddress candidateAddress = null;
             // 遍历所有的网络接口
