@@ -32,4 +32,9 @@
         <appender-ref ref="console" />
         <!--<appender-ref ref="rollingFile" />-->
     </root>
+
+    <!--屏蔽所有org.tio输出的log信息-->
+    <logger name="org.tio">
+        <level value="OFF"></level>
+    </logger>
 </configuration>

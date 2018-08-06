@@ -7,10 +7,7 @@ import com.blockchain.core.net.Connecter;
 import com.blockchain.core.net.client.ClientStarter;
 import com.blockchain.exception.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.tio.core.Node;
 
 import java.util.HashSet;
@@ -31,7 +28,7 @@ public class NodeController {
     /**
      * 当前在线节点
      */
-    @GetMapping("/current")
+    @PostMapping("/current")
     public BaseData getPool() throws ApiException {
         List<Node> currentOnlineNodes = Connecter.getCurrentOnlineNodesContainsLocal();
         return ResultGenerator.genSuccessResult(currentOnlineNodes);
@@ -40,7 +37,7 @@ public class NodeController {
     /**
      * 手动连接到某一节点
      */
-    @GetMapping("/connect")
+    @PostMapping("/connect")
     public BaseData connectTo(@RequestParam String ip,@RequestParam int port) throws ApiException{
         Set<Node> nodeSet = new HashSet<>();
         nodeSet.add(new Node(ip, port));

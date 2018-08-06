@@ -167,7 +167,7 @@ public class Connecter {
         InetAddress localHost = CommonUtil.getLocalHostLANAddress();
         return new Node(localHost.getHostAddress(),App.LOCAL_PORT);
     }
-    
+
     /**
      * 通过总节点数求出pbft算法中拜占庭节点数量f，总节点数为3f+1
      */

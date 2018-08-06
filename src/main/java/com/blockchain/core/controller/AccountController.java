@@ -44,7 +44,7 @@ public class AccountController {
 	/**
 	 * 获取当前所有账户数据  仅供测试环境使用
 	 */
-	@GetMapping("/all")
+	@PostMapping("/all")
 	public BaseData getAll() {
 		return ResultGenerator.genSuccessResult(accountManager.getAllAccount());
 	}
@@ -53,7 +53,7 @@ public class AccountController {
 	/**
 	 * 查看本地账户池中的数据
 	 */
-	@GetMapping("/pool")
+	@PostMapping("/pool")
 	public BaseData getPool() throws ApiException {
 		return ResultGenerator.genSuccessResult(accountPool.getAccounts());
 	}
@@ -61,7 +61,7 @@ public class AccountController {
 	/**
 	 * 清空本地账户池中的新账户
 	 */
-	@GetMapping("/pool/clear")
+	@PostMapping("/pool/clear")
 	public BaseData clearPool() throws ApiException {
 		accountPool.clearPool();
 		return ResultGenerator.genSuccessResult();

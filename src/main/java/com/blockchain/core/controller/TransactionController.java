@@ -84,7 +84,7 @@ public class TransactionController {
     /**
      * 查看本地交易池中的交易
      */
-    @GetMapping("/pool")
+    @PostMapping("/pool")
     public BaseData getPool() throws ApiException {
         return ResultGenerator.genSuccessResult(transactionPool.getTransactions());
     }
@@ -92,7 +92,7 @@ public class TransactionController {
     /**
      * 清空本地交易池中的交易
      */
-    @GetMapping("/pool/clear")
+    @PostMapping("/pool/clear")
     public BaseData clearPool() throws ApiException {
         transactionPool.clearPool();
         return ResultGenerator.genSuccessResult();
