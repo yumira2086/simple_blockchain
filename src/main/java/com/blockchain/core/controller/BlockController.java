@@ -11,6 +11,7 @@ import com.blockchain.common.ApplicationContextProvider;
 import com.blockchain.common.ResultGenerator;
 import com.blockchain.bean.block.Block;
 import com.blockchain.common.Constants;
+import com.blockchain.core.net.MessageBuilder;
 import com.blockchain.core.net.MessagePacket;
 import com.blockchain.core.net.PacketType;
 import com.blockchain.core.net.Sender;
@@ -72,7 +73,7 @@ public class BlockController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/publickey")
+    @PostMapping("/publicKey")
     public BaseData setPublicKey(@RequestParam String publicKey) {
         App.PUBLIC_KEY = publicKey;
         blockManager.putPublicKey(publicKey);
@@ -89,9 +90,23 @@ public class BlockController {
     @PostMapping("/stop")
     public BaseData stopMine() {
         App.ALLOW_MINE = false;
+        logger.info("停止挖矿");
         return ResultGenerator.genSuccessResult();
     }
 
+
+    /**
+     * 手动同步区块
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/sync")
+    public BaseData sync() {
+        logger.info("---------开始同步新区块--------");
+        MessagePacket syncMessage = MessageBuilder.buildSyncBlockPacket(blockManager.getLastBlockHash());
+        Sender.sendGroup(syncMessage);
+        return ResultGenerator.genSuccessResult();
+    }
 
 //
 //    @PostMapping("/test")
@@ -154,9 +169,14 @@ public class BlockController {
      * @return
      */
     @PostMapping("/autowork")
-    public BaseData setAutoMine(boolean isAutoWork){
-        App.AUTO_WORK = isAutoWork;
-        logger.info("设置自动挖矿："+isAutoWork);
+    public BaseData setAutoMine(int isAutoWork){
+        if (isAutoWork == 1){
+            App.AUTO_WORK = true;
+            logger.info("开启自动挖矿");
+        }else {
+            App.AUTO_WORK = false;
+            logger.info("关闭自动挖矿");
+        }
         return ResultGenerator.genSuccessResult();
     }
 

@@ -9,6 +9,8 @@ import com.blockchain.bean.transaction.Transaction;
 import com.blockchain.checker.CheckResult;
 import com.blockchain.common.App;
 import com.blockchain.common.ApplicationContextProvider;
+import com.blockchain.core.net.handler.ConfirmBlockResponseHandler;
+import com.blockchain.core.net.handler.SyncBlockResponseHandler;
 import com.blockchain.manmger.BlockManager;
 import com.blockchain.utils.JsonUtil;
 
@@ -50,6 +52,7 @@ public class MessageBuilder {
      * @return
      */
     public static MessagePacket buildSyncBlockPacket(String hash) {
+        ApplicationContextProvider.getBean(SyncBlockResponseHandler.class).startBft();
         MessagePacket packet = new PacketBuilder<String>()
                 .setType(PacketType.SYNC_BLOCK_INFO_REQUEST)
                 .setBody(hash)
@@ -122,6 +125,7 @@ public class MessageBuilder {
      * @return
      */
     public static MessagePacket buildBlockResponsePacket(CheckResult checkResult) {
+        ApplicationContextProvider.getBean(ConfirmBlockResponseHandler.class).startBft();
         MessagePacket packet = new PacketBuilder<CheckResult>()
                 .setType(PacketType.BLOCK_COMPLETE_RESPONSE)
                 .setBody(checkResult)

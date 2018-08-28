@@ -2,11 +2,10 @@ package com.blockchain.core.net.handler;
 
 
 import com.blockchain.bean.block.Block;
+import com.blockchain.bft.BftMaps;
 import com.blockchain.bft.SimpleBft;
-import com.blockchain.bft.SyncBlockBftHandler;
 import com.blockchain.checker.CheckResult;
 import com.blockchain.common.App;
-import com.blockchain.common.ApplicationContextProvider;
 import com.blockchain.core.BlockExecutor;
 import com.blockchain.core.net.AbstractMessageHandler;
 import com.blockchain.core.net.MessageBuilder;
@@ -38,9 +37,6 @@ public class SyncBlockResponseHandler extends AbstractMessageHandler<Block> {
      */
     private Block currentSyncBlock;
 
-    /**
-     * 初始化pbft算法处理器
-     */
     private SimpleBft bft = initBft();
 
     @Override
@@ -85,19 +81,23 @@ public class SyncBlockResponseHandler extends AbstractMessageHandler<Block> {
         }else {
             //如果为空，说明已经同步到最新区块了
             logger.info("相较于 " + channelContext.getServerNode() + " ，本地已是最新块了\n");
+            App.isSyncComplete = true;
+
+            // TODO: 2018/8/28 这里要解决bft共识的并发问题
             // 用PBFT共识算法来判断是否完成同步
-            bft.receiveEvent(blockManager.getLastBlock());
+//            bft.receiveEvent(blockManager.getLastBlock());
         }
         return null;
     }
 
 
-    /**
-     * 这里用拜占庭容错算法校验是否同步到最后一个区块
-     * 当前已连接节点数N，如果收到的相同区块hash数量，满足 (2N+1)/3 即区块同步成功
-     */
+    public void startBft(){
+        bft.clear();
+    }
+
+
     private SimpleBft initBft(){
-        return new SimpleBft<Block>() {
+        return new SimpleBft<Block>(BftMaps.SyncBlockMap) {
             @Override
             public boolean equals(Block object1, Block object2) {
                 if (object1.getHash().equals(object2.getHash())){

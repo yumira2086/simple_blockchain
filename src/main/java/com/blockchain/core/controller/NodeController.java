@@ -23,8 +23,7 @@ import java.util.Set;
 @RequestMapping("/node")
 public class NodeController {
 
-    @Autowired
-    private ClientStarter clientStarter;
+
     /**
      * 当前在线节点
      */
@@ -43,5 +42,14 @@ public class NodeController {
         nodeSet.add(new Node(ip, port));
         Connecter.bindToGroup(nodeSet);
         return ResultGenerator.genSuccessResult("正在尝试连接，连接详情请查看日志");
+    }
+
+    /**
+     * 清空本地节点数据
+     */
+    @PostMapping("/clear")
+    public BaseData clear() throws ApiException{
+        Connecter.clearNodes();
+        return ResultGenerator.genSuccessResult();
     }
 }

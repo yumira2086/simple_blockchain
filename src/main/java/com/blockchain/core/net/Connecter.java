@@ -63,6 +63,8 @@ public class Connecter {
         }
     }
 
+
+
     public static List<Node> getNodes(){
         DbStore dbStore = ApplicationContextProvider.getBean(DbStore.class);
         List<Node> nodeList = new ArrayList<>();
@@ -73,6 +75,11 @@ public class Connecter {
         return nodeList;
     }
 
+    public static void clearNodes(){
+        DbStore dbStore = ApplicationContextProvider.getBean(DbStore.class);
+        dbStore.put(Constants.LOCAL_NODES, JsonUtil.toJSONString(new ArrayList<>()));
+        logger.info("清空本地节点");
+    }
 
     /**
      * 这里要考虑一下什么时候删除本地节点
@@ -107,7 +114,7 @@ public class Connecter {
      */
     public static List<Node> getCurrentOnlineNodesContainsLocal(){
         List<Node> currentOnlineNodes = getCurrentOnlineNodes();
-        currentOnlineNodes.add(new Node(App.LOCAL_IP, App.LOCAL_PORT));
+        currentOnlineNodes.add(new Node("127.0.0.1", App.LOCAL_PORT));
         return currentOnlineNodes;
     }
 

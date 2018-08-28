@@ -6,10 +6,12 @@ package com.blockchain.bft;
  * Description:
  */
 public interface BFT<T,K> {
+
     int fSize();
     int bftAgreeCount();
     int totalSize();
     boolean equals(T object1, K object2);
     void onAgreement();
     void onAgreeFail();
+    void onEnd();
 }

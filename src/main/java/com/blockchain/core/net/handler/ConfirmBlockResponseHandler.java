@@ -1,6 +1,7 @@
 package com.blockchain.core.net.handler;
 
 import com.blockchain.bean.block.Block;
+import com.blockchain.bft.BftMaps;
 import com.blockchain.bft.SimpleBft;
 import com.blockchain.checker.CheckResult;
 import com.blockchain.common.App;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tio.core.ChannelContext;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Created by: Yumira.
  * Created on: 2018/7/30-下午9:41.
@@ -22,10 +25,6 @@ import org.tio.core.ChannelContext;
 @Component
 public class ConfirmBlockResponseHandler extends AbstractMessageHandler<CheckResult> {
 
-    /**
-     * 初始化pbft算法处理器
-     */
-    private SimpleBft bft = initBft();
 
     @Autowired
     private BlockExecutor blockExecutor;
@@ -33,6 +32,10 @@ public class ConfirmBlockResponseHandler extends AbstractMessageHandler<CheckRes
     private BlockManager blockManager;
     @Autowired
     private ClientStarter clientStarter;
+
+    public ConcurrentHashMap<Object,Integer> bftMap = new ConcurrentHashMap<>();
+
+    private SimpleBft bft = initBft();
 
     @Override
     public Class<CheckResult> parseBodyClass() {
@@ -46,17 +49,23 @@ public class ConfirmBlockResponseHandler extends AbstractMessageHandler<CheckRes
         }else {
             logger.error("来自 "+channelContext.getServerNode()+" 的<Block确认失败>消息, {}", body);
             App.ALLOW_MINE = false;//此处说明产生分叉，暂停挖矿
-            bft.receiveEvent(SimpleBft.KEY);
+
+            // TODO: 2018/8/28 解决共识的并发问题
+//            bft.receiveEvent(SimpleBft.KEY);
         }
         return null;
     }
 
 
+    public void startBft(){
+        bftMap.clear();
+    }
+
     /**
      * 这里用拜占庭容错算法校验是否是本地区块错误导致分叉
      */
     private SimpleBft initBft(){
-        return new SimpleBft<Object>() {
+        return new SimpleBft<Object>(BftMaps.ConfirmBlockMap) {
             @Override
             public boolean equals(Object object1, Object object2) {
                 return true;
