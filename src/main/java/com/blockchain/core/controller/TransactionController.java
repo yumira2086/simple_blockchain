@@ -35,10 +35,9 @@ public class TransactionController {
 
 
     /**
-     * 构建一条交易，因为需要私钥签名，可以放在前端处理，避免私钥传递
-     * @return
+     * 构建一条交易，因为需要私钥签名，建议放在前端处理，避免私钥传递
      *
-     * {
+     {
     "from": "11pkwDUGPM5hURFGhvdxXrYeMbxJ4bxPY",
     "to": "14Jau3qb1i5MeAxkWSSKbcpN6hTLR9U5fi",
     "amount": 0.1,

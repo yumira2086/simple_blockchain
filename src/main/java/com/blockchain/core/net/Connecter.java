@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 /**
@@ -171,7 +170,7 @@ public class Connecter {
     /**
      * 通过总节点数求出pbft算法中拜占庭节点数量f，总节点数为3f+1
      */
-    public static int pbftSize() {
+    public static int fSize() {
         //当前所有在线节点
         int total = getCurrentOnlineNodes().size();
         int f = (total - 1) / 3;
@@ -187,8 +186,8 @@ public class Connecter {
      * 通过恶意节点数量，求出允许放行的最小票数 2f+1
      * @return
      */
-    public static int pbftAgreeCount() {
-        return pbftSize() * 2 + 1;
+    public static int bftAgreeCount() {
+        return fSize() * 2 + 1;
     }
 
 }

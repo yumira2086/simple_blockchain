@@ -1,6 +1,5 @@
 package com.blockchain.bft;
 
-import com.blockchain.common.App;
 import com.blockchain.core.net.Connecter;
 
 import java.util.Map;
@@ -14,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class SimpleBft<T> implements BFT<T,T> {
 
     private Map<T,Integer> bftMap = new ConcurrentHashMap<>();
+
+    public static final String KEY = "key";
 
     /**
      * 拜占庭容错的事件接受方法
@@ -31,7 +32,7 @@ public abstract class SimpleBft<T> implements BFT<T,T> {
         int rejectCnt = 0;
         for (Map.Entry<T, Integer> entry : bftMap.entrySet()) {
             rejectCnt = rejectCnt + entry.getValue();
-            if (rejectCnt >= bftLimitCount()){
+            if (rejectCnt >= bftAgreeCount()){
                 onAgreeFail();//如果票数已经达到2f+1，还未达到共识，即本次共识失败
                 return;
             }
@@ -42,7 +43,7 @@ public abstract class SimpleBft<T> implements BFT<T,T> {
         if (flag != null){
             int v = bftMap.get(flag);
             bftMap.put(flag,++v);
-            if (bftMap.get(flag) >= bftLimitCount()){
+            if (bftMap.get(flag) >= bftAgreeCount()){
                 onAgreement();//共识成功
             }
         }else {
@@ -51,13 +52,13 @@ public abstract class SimpleBft<T> implements BFT<T,T> {
     }
 
     @Override
-    public int bftSize() {
-        return Connecter.pbftSize();
+    public int fSize() {
+        return Connecter.fSize();
     }
 
     @Override
-    public int bftLimitCount() {
-        return Connecter.pbftAgreeCount();
+    public int bftAgreeCount() {
+        return Connecter.bftAgreeCount();
     }
 
     @Override

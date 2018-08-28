@@ -50,10 +50,12 @@ public class SyncBlockResponseHandler extends AbstractMessageHandler<Block> {
 
     /**
      * 这里要处理高并发的情况，多线程执行会导致交易时间校验错误，即便数据库操作是线程安全的
+     *
+     * todo：这里需要改进算法，先用拜占庭容错求出正确的最末BlockHash以及非恶意节点，然后与非恶意节点建立连接并同步区块
      */
     @Override
     public Object handler(MessagePacket packet, Block body, ChannelContext channelContext) throws Exception {
-        //并发校验
+        //并发处理
         if ((currentSyncBlock != null
                 && currentSyncBlock.equals(body))//说明已经有线程正在同步该区块，其他线程不需要再继续执行
                 || (body != null && currentSyncBlock != null
@@ -114,7 +116,7 @@ public class SyncBlockResponseHandler extends AbstractMessageHandler<Block> {
 
             @Override
             public void onAgreeFail() {
-                logger.info("bft共识失败，有恶意节点存在，请稍候再试");
+                logger.info("bft共识失败，有恶意节点存在，请删除数据重新同步");
                 App.isSyncComplete = false;
             }
         };

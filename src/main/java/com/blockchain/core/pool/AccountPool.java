@@ -29,7 +29,7 @@ public class AccountPool {
 	public synchronized boolean putAccount(Account account) {
 		List<String> accounts = getAccounts();
 		boolean exists = false;
-		//检验交易是否存在本地，避免重复添加
+		//检验账户是否存在本地，避免重复添加
 		for (String address : accounts) {
 			if (account.getAddress().equals(address)) {
 				exists = true;
@@ -37,14 +37,14 @@ public class AccountPool {
 		}
 		if (!exists) {
 			accounts.add(account.getAddress());
-			//更新本地交易池
+			//更新本地账户池
 			dbStore.put(Constants.KEY_ACCOUNT_POOL, JsonUtil.toJSONString(accounts));
 		}
 		return !exists;
 	}
 
 	/**
-	 * 清理新区块与本地交易池交集中的数据
+	 * 清理新区块与本地账户池交集中的数据
 	 */
 	public void updateAccounts(Block block){
 		List<String> localAddr = getAccounts();
@@ -61,7 +61,7 @@ public class AccountPool {
 
 
 	/**
-	 * 取出交易池中的数据
+	 * 取出账户池中的数据
 	 */
 	public List<String> getAccounts() {
 		String result = dbStore.get(Constants.KEY_ACCOUNT_POOL);
@@ -73,7 +73,7 @@ public class AccountPool {
 
 
 	/**
-	 * 更新交易池所有数据
+	 * 更新账户池所有数据
 	 */
 	public void updateAccounts(List<String> addresses){
 		dbStore.put(Constants.KEY_ACCOUNT_POOL, JsonUtil.toJSONString(addresses));
@@ -81,7 +81,7 @@ public class AccountPool {
 
 
 	/**
-	 * 清空交易池
+	 * 清空账户池
 	 */
 	public void clearPool() {
 		dbStore.put(Constants.KEY_ACCOUNT_POOL,"");
